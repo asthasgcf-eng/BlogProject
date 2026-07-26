@@ -1,43 +1,35 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Blog</title>
+
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
 
     <nav>
-        <h2>My Blog</h2>
-
-        <a href="index.html">Home</a>
-        <a href="add-blog.html">Add Blog</a>
+        <a href="index.html">Home</a> |
+        <a href="adblog.html">Add Blog</a>
     </nav>
 
     <hr>
 
     <h1>Add New Blog</h1>
 
-    <form>
+    <form id="blogForm">
 
-        <label>Blog Title</label>
-        <br>
-        <input type="text">
-        <br><br>
+        <label>Blog Title</label><br>
+        <input type="text" id="title"><br><br>
 
-        <label>Author Name</label>
-        <br>
-        <input type="text">
-        <br><br>
+        <label>Author Name</label><br>
+        <input type="text" id="author"><br><br>
 
-        <label>Blog Description</label>
-        <br>
-        <textarea rows="6" cols="40"></textarea>
+        <label>Blog Description</label><br>
+        <textarea id="description" rows="6" cols="40"></textarea><br><br>
 
-        <br><br>
-
-        <button>Submit</button>
+        <button type="submit">Submit</button>
 
     </form>
 
@@ -46,6 +38,8 @@
     <footer>
         <p>© 2026 My Blog</p>
     </footer>
+
+    <script src="js/script.js"></script>
 
 </body>
 </html>
