@@ -1,24 +1,29 @@
 const express = require("express");
-
 const app = express();
-
-const PORT = 3000;
-
 app.use(express.json());
-
+let blogs = [];
 app.get("/", (req, res) => {
   res.send("Welcome to My Blog API");
 });
 
+app.get("/blogs", (req, res) => {
+  res.json(blogs);
+});
+
 app.post("/add-blog", (req, res) => {
-  const blog = req.body;
+  const { title, author, description } = req.body;
+  const newBlog = {
+    title,
+    author,
+    description,
+  };
+  blogs.push(newBlog);
 
   res.json({
     message: "Blog added successfully!",
-    blog: blog,
+    blog: newBlog,
   });
 });
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
 });
