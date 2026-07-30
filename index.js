@@ -5,11 +5,9 @@ let blogs = [];
 app.get("/", (req, res) => {
   res.send("Welcome to My Blog API");
 });
-
 app.get("/blogs", (req, res) => {
   res.json(blogs);
 });
-
 app.post("/add-blog", (req, res) => {
   const { title, author, description } = req.body;
   const newBlog = {
@@ -24,6 +22,29 @@ app.post("/add-blog", (req, res) => {
     blog: newBlog,
   });
 });
+
+app.put("/edit-blog/:index", (req, res) => {
+  const index = req.params.index;
+  const { title, author, description } = req.body;
+
+  if (blogs[index]) {
+    blogs[index] = {
+      title,
+      author,
+      description,
+    };
+
+    res.json({
+      message: "Blog updated successfully!",
+      blog: blogs[index],
+    });
+  } else {
+    res.status(404).json({
+      message: "Blog not found!",
+    });
+  }
+});
+
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
 });
