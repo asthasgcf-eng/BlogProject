@@ -30,9 +30,14 @@ if (form) {
     })
       .then((response) => response.json())
       .then((data) => {
-        alert(data.message);
-        window.location.href = "index.html";
-      })
+
+    form.reset();
+
+    alert(data.message);
+
+    window.location.href = "index.html";
+
+})
       .catch((error) => {
         console.log(error);
         alert("Something went wrong.");
@@ -51,13 +56,27 @@ if (blogContainer) {
 }
 
 function loadBlogs() {
-  fetch("http://localhost:3000/blogs")
-    .then((response) => response.json())
-    .then((blogs) => {
-      blogContainer.innerHTML = "";
 
-      blogs.forEach((blog, index) => {
-        blogContainer.innerHTML += `
+    
+    blogContainer.innerHTML="<h3 style='text-align:center;'>Loading Blogs...</h3>";
+    fetch("http://localhost:3000/blogs")
+        .then(response => response.json())
+        .then(blogs => {
+
+            blogContainer.innerHTML = "";
+
+            if (blogs.length === 0) {
+                blogContainer.innerHTML = `
+                    <h3 style="text-align:center;">
+                        No blogs available.
+                    </h3>
+                `;
+                return;
+            }
+
+            blogs.forEach((blog, index) => {
+
+                blogContainer.innerHTML += `
                     <div class="blog-card">
 
                         <h3>${blog.title}</h3>
@@ -67,20 +86,29 @@ function loadBlogs() {
                         <p>${blog.description}</p>
 
                         <button onclick="editBlog(${index})">
-    ✏ Edit
-</button>
+                            ✏ Edit
+                        </button>
 
-<button onclick="deleteBlog(${index})">
-    🗑 Delete
-</button>
+                        <button onclick="deleteBlog(${index})">
+                            🗑 Delete
+                        </button>
 
                     </div>
                 `;
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+
+            });
+
+        })
+        .catch(() => {
+
+            blogContainer.innerHTML = `
+                <h3 style="color:red;text-align:center;">
+                    Failed to load blogs.
+                </h3>
+            `;
+
+        });
+
 }
 
 // ------------------------
