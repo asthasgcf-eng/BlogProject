@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,39 +8,67 @@
 
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-    <nav>
-        <a href="index.html">Home</a> |
-        <a href="adblog.html">Add Blog</a>
+    <nav class="navbar">
+
+        <h2>📝 My Blog</h2>
+
+        <div>
+            <a href="index.html">Home</a>
+            <a href="adblog.html">Add Blog</a>
+        </div>
+
     </nav>
 
-    <hr>
+    <section class="hero">
 
-    <h1>Add New Blog</h1>
+        <h1>Add New Blog</h1>
+
+        <p>Create and publish your blog.</p>
+
+    </section>
 
     <form id="blogForm">
 
-        <label>Blog Title</label><br>
-        <input type="text" id="title"><br><br>
+        <label>Blog Title</label>
+        <input
+            type="text"
+            id="title"
+            placeholder="Enter blog title"
+            required
+        >
 
-        <label>Author Name</label><br>
-        <input type="text" id="author"><br><br>
+        <label>Author Name</label>
+        <input
+            type="text"
+            id="author"
+            placeholder="Enter author name"
+            required
+        >
 
-        <label>Blog Description</label><br>
-        <textarea id="description" rows="6" cols="40"></textarea><br><br>
+        <label>Blog Description</label>
 
-        <button type="submit">Submit</button>
+        <textarea
+            id="description"
+            rows="6"
+            placeholder="Write your blog here..."
+            required
+        ></textarea>
+
+        <button type="submit">Add Blog</button>
 
     </form>
 
-    <hr>
-
     <footer>
-        <p>© 2026 My Blog</p>
+
+        <p>© 2026 My Blog | Created by Astha</p>
+
     </footer>
 
     <script src="js/script.js"></script>
 
 </body>
+
 </html>
