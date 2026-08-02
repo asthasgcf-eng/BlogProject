@@ -5,39 +5,39 @@ const form = document.getElementById("blogForm");
 // ------------------------
 
 if (form) {
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-        const title = document.getElementById("title").value;
-        const author = document.getElementById("author").value;
-        const description = document.getElementById("description").value;
+    const title = document.getElementById("title").value;
+    const author = document.getElementById("author").value;
+    const description = document.getElementById("description").value;
 
-        if (!title || !author || !description) {
-            alert("Please fill all the fields.");
-            return;
-        }
+    if (!title || !author || !description) {
+      alert("Please fill all the fields.");
+      return;
+    }
 
-        fetch("http://localhost:3000/add-blog", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title,
-                author,
-                description
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            window.location.href = "index.html";
-        })
-        .catch(error => {
-            console.log(error);
-            alert("Something went wrong.");
-        });
-    });
+    fetch("http://localhost:3000/add-blog", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        author,
+        description,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert(data.message);
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Something went wrong.");
+      });
+  });
 }
 
 // ------------------------
@@ -47,20 +47,17 @@ if (form) {
 const blogContainer = document.getElementById("blogContainer");
 
 if (blogContainer) {
-    loadBlogs();
+  loadBlogs();
 }
 
 function loadBlogs() {
+  fetch("http://localhost:3000/blogs")
+    .then((response) => response.json())
+    .then((blogs) => {
+      blogContainer.innerHTML = "";
 
-    fetch("http://localhost:3000/blogs")
-        .then(response => response.json())
-        .then(blogs => {
-
-            blogContainer.innerHTML = "";
-
-            blogs.forEach((blog, index) => {
-
-                blogContainer.innerHTML += `
+      blogs.forEach((blog, index) => {
+        blogContainer.innerHTML += `
                     <div class="blog-card">
 
                         <h3>${blog.title}</h3>
@@ -70,17 +67,20 @@ function loadBlogs() {
                         <p>${blog.description}</p>
 
                         <button onclick="editBlog(${index})">
-                            ✏ Edit
-                        </button>
+    ✏ Edit
+</button>
+
+<button onclick="deleteBlog(${index})">
+    🗑 Delete
+</button>
 
                     </div>
                 `;
-            });
-
-        })
-        .catch(error => {
-            console.log(error);
-        });
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 // ------------------------
@@ -88,39 +88,73 @@ function loadBlogs() {
 // ------------------------
 
 function editBlog(index) {
+  const title = prompt("Enter new title");
+  if (title === null) return;
 
-    const title = prompt("Enter new title");
-    if (title === null) return;
+  const author = prompt("Enter new author");
+  if (author === null) return;
 
-    const author = prompt("Enter new author");
-    if (author === null) return;
+  const description = prompt("Enter new description");
+  if (description === null) return;
 
-    const description = prompt("Enter new description");
-    if (description === null) return;
+  if (!title || !author || !description) {
+    alert("All fields are required.");
+    return;
+  }
 
-    if (!title || !author || !description) {
-        alert("All fields are required.");
+  fetch(`http://localhost:3000/edit-blog/${index}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      author,
+      description,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.message);
+      loadBlogs();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert("Something went wrong.");
+    });
+}
+
+function deleteBlog(index) {
+
+    if (!confirm("Are you sure you want to delete this blog?")) {
         return;
     }
 
-    fetch(`http://localhost:3000/edit-blog/${index}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title,
-            author,
-            description
-        })
+    fetch(`http://localhost:3000/delete-blog/${index}`, {
+        method: "DELETE"
     })
-    .then(response => response.json())
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error("Delete failed");
+        }
+
+        return response.json();
+
+    })
     .then(data => {
+
         alert(data.message);
+
         loadBlogs();
+
     })
     .catch(error => {
-        console.log(error);
-        alert("Something went wrong.");
+
+        console.error(error);
+
+        alert("Delete request failed.");
+
     });
+
 }

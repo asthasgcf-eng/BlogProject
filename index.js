@@ -89,6 +89,27 @@ app.put("/edit-blog/:index", (req, res) => {
   });
 });
 
+// Delete Blog
+app.delete("/delete-blog/:index", (req, res) => {
+
+    const index = parseInt(req.params.index);
+
+    if (isNaN(index) || index < 0 || index >= blogs.length) {
+
+        return res.status(404).json({
+            message: "Blog not found!"
+        });
+
+    }
+
+    blogs.splice(index, 1);
+
+    res.status(200).json({
+        message: "Blog deleted successfully!"
+    });
+
+});
+
 // Start Server
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
