@@ -30,14 +30,12 @@ if (form) {
     })
       .then((response) => response.json())
       .then((data) => {
+        form.reset();
 
-    form.reset();
+        alert(data.message);
 
-    alert(data.message);
-
-    window.location.href = "index.html";
-
-})
+        window.location.href = "index.html";
+      })
       .catch((error) => {
         console.log(error);
         alert("Something went wrong.");
@@ -56,27 +54,43 @@ if (blogContainer) {
 }
 
 function loadBlogs() {
+  let html = "";
 
-    
-    blogContainer.innerHTML="<h3 style='text-align:center;'>Loading Blogs...</h3>";
-    fetch("http://localhost:3000/blogs")
-        .then(response => response.json())
-        .then(blogs => {
+  blogs.forEach((blog, index) => {
+    html += `
+<div class="blog-card">
 
-            blogContainer.innerHTML = "";
+<h3>${blog.title}</h3>
 
-            if (blogs.length === 0) {
-                blogContainer.innerHTML = `
+<p><strong>Author:</strong> ${blog.author}</p>
+
+<p>${blog.description}</p>
+
+<button onclick="editBlog(${index})">✏ Edit</button>
+
+<button onclick="deleteBlog(${index})">🗑 Delete</button>
+
+</div>
+`;
+  });
+
+  blogContainer.innerHTML = html;
+  fetch("http://localhost:3000/blogs")
+    .then((response) => response.json())
+    .then((blogs) => {
+      blogContainer.innerHTML = "";
+
+      if (blogs.length === 0) {
+        blogContainer.innerHTML = `
                     <h3 style="text-align:center;">
                         No blogs available.
                     </h3>
                 `;
-                return;
-            }
+        return;
+      }
 
-            blogs.forEach((blog, index) => {
-
-                blogContainer.innerHTML += `
+      blogs.forEach((blog, index) => {
+        blogContainer.innerHTML += `
                     <div class="blog-card">
 
                         <h3>${blog.title}</h3>
@@ -95,25 +109,19 @@ function loadBlogs() {
 
                     </div>
                 `;
-
-            });
-
-        })
-        .catch(() => {
-
-            blogContainer.innerHTML = `
+      });
+    })
+    .catch(() => {
+      blogContainer.innerHTML = `
                 <h3 style="color:red;text-align:center;">
                     Failed to load blogs.
                 </h3>
             `;
-
-        });
-
+    });
 }
 
 // ------------------------
 // Edit Blog
-// ------------------------
 
 function editBlog(index) {
   const title = prompt("Enter new title");
@@ -153,36 +161,28 @@ function editBlog(index) {
 }
 
 function deleteBlog(index) {
+  if (!confirm("Are you sure you want to delete this blog?")) {
+    return;
+  }
 
-    if (!confirm("Are you sure you want to delete this blog?")) {
-        return;
-    }
+  fetch(`http://localhost:3000/delete-blog/${index}`, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Delete failed");
+      }
 
-    fetch(`http://localhost:3000/delete-blog/${index}`, {
-        method: "DELETE"
+      return response.json();
     })
-    .then(response => {
+    .then((data) => {
+      alert(data.message);
 
-        if (!response.ok) {
-            throw new Error("Delete failed");
-        }
-
-        return response.json();
-
+      loadBlogs();
     })
-    .then(data => {
+    .catch((error) => {
+      console.error(error);
 
-        alert(data.message);
-
-        loadBlogs();
-
-    })
-    .catch(error => {
-
-        console.error(error);
-
-        alert("Delete request failed.");
-
+      alert("Delete request failed.");
     });
-
 }
